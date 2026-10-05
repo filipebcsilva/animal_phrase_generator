@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">animal_phrase_generator</string>
+    <string name="edit_name">Digite seu nome:</string>
+    <string name="button_save">Guardar</string>
+    <string name="text_phrase">Frases de Gatos e Cachorros</string>
+    <string name="text_first_hello">Olá,</string>
+    <string name="button_generate">Gerar outra frase</string>
+    <string name="error_msg">Name cannot be empty or have less than three letters</string>
+    <string name="error_phrase_msg">Error uploading the name</string>
+    <string name="error_without_selection_msg">You must select one of the animals</string>
+    <string name="button_edit_name_text">Trocar nome</string>
+    <string name="success_delete_phrase">Sucess deleting the phrase</string>
+</resources>
