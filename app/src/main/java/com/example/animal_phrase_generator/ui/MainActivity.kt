@@ -1,6 +1,5 @@
-package com.example.animal_phrase_generator
+package com.example.animal_phrase_generator.ui
 
-import MyPreferences
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -8,16 +7,18 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import com.example.animal_phrase_generator.viewModel.MainViewModel
+import com.example.animal_phrase_generator.R
 import com.example.animal_phrase_generator.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding : ActivityMainBinding;
+    private lateinit var mainVM: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val p = MyPreferences(applicationContext)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
@@ -31,12 +32,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.buttonSave.setOnClickListener(this)
 
-        val isEditing = intent.getBooleanExtra("EDIT", false)
+        mainVM = ViewModelProvider(this).get(MainViewModel::class.java)
+        setObservers()
 
-        if (!isEditing && p.getString("NAME").isNotEmpty()){
-            startActivity(Intent(this, PhraseActivity::class.java))
-            finish()
-            return
+        mainVM.existName()
+    }
+
+    private fun setObservers() {
+        mainVM.nameError.observe(this){
+            if (it == true){
+                Toast.makeText(applicationContext, R.string.error_msg, Toast.LENGTH_SHORT).show()
+                mainVM.setNameErrorFalse()
+            }
+        }
+        mainVM.goPhraseActivity.observe(this){
+            if (it == true){
+                startActivity(Intent(this, PhraseActivity::class.java))
+                finish()
+            }
         }
     }
 
@@ -44,14 +57,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         if (v?.id == binding.buttonSave.id)
         {
             val name = binding.editName.text.toString()
-            if (name.isEmpty() || name.length <= 3){
-                Toast.makeText(applicationContext, R.string.error_msg, Toast.LENGTH_SHORT).show()
-                return
-            }
-            val p = MyPreferences(applicationContext)
-            p.setString("NAME",name)
-            startActivity(Intent(this, PhraseActivity::class.java))
-            finish()
+            mainVM.validateName(name)
         }
     }
 }

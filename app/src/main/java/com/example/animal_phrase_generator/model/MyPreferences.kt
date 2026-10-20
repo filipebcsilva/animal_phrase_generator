@@ -1,3 +1,5 @@
+package com.example.animal_phrase_generator.model
+
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
